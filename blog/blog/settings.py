@@ -129,3 +129,9 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_REDIRECT_URL = '/'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'adityaagrawal99601@gmail.com'
+EMAIL_HOST_PASSWORD = 'Aaditya@9960'
