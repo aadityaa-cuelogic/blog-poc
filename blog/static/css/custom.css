@@ -1,0 +1,14 @@
+.comment-textarea{
+    border-radius: 4px 4px 0 0;
+    color: #777777;
+    float: left;
+    font-family: Lato;
+    font-size: 14px;
+    height: 90px;
+    letter-spacing: 0.3px;
+    padding: 20px;
+    width: 100%;
+    resize: vertical;
+    outline: none;
+    border: 1px solid #F2F2F2;
+}
