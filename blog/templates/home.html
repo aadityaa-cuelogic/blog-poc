@@ -3,11 +3,26 @@
 {% block content %}
 
 <div class="container">
+    <nav class="navbar navbar-default" role="navigation" id="topmenu">
+        <ul class="nav navbar-nav navbar-left">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    {% for cat in category %}
+                        <li><a href="3">{{cat.title}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li>
+                <a href="/user/newpost">Create Post</a>
+            </li>
+        </ul>
+    </nav>
+    <h3>Blogs</h3>
     <div class="row">
-        <div class="jumbotron">
-            <h1>Hello</h1>
-            <p>You are on your Dashboard</p>
-        </div>
+      {% include "post.html" %}
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h2>
+            <a href="/blog/{{post.slug}}">{{blog_post.title}}</a>
+        </h2>
+        <p class="lead">
+            by <a href="/user/{{blog_post.author.username}}">{{blog_post.author.first_name}} {{blog_post.author.last_name}}</a>
+        </p>
+        <p><span class="glyphicon glyphicon-time"></span> Posted on {{blog_post.created_on}}</p>
+        <p>Category: <a href="#">{{blog_post.category.title}}</a></p>
+        <hr>
+        <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+        <hr>
+        <p>{{blog_post.body}}</p>
+        <hr>
+        <!-- Post comment block -->
+        <div class="well">
+            <h4>Leave a Comment:</h4>
+            <form role="form">
+                <div class="form-group">
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <!-- /Post comment block -->
+        <!-- Previous comments -->
+        {% for msg in comment %}
+            <div class="row">
+                <div class="col-sm-1">
+                    <div class="thumbnail">
+                        <img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+                    </div><!-- /thumbnail -->
+                </div><!-- /col-sm-1 -->
+
+                <div class="col-sm-11">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <strong>{{msg.user.username}}</strong> <span class="text-muted">Posted on {{msg.created_on}}</span>
+                        </div>
+                        <div class="panel-body">
+                            {{msg.text}}
+                        </div><!-- /panel-body -->
+                    </div><!-- /panel panel-default -->
+                </div><!-- /col-sm-5 -->
+            </div>
+        {% endfor %}
+        <!-- /Previous comments -->
+        <a class="btn btn-primary" href="#">Load More <span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
+</div>
+{% endblock %}

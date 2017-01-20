@@ -21,14 +21,14 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-        super(Post, self).save(*args, **kwargs)
+        super(Category, self).save(*args, **kwargs)
 
 class Post(models.Model):
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField()
+    updated_on = models.DateTimeField(auto_now_add=True)
     is_active = models.SmallIntegerField(default=1)
     is_spam = models.SmallIntegerField(default=0)
     category = models.ForeignKey(Category)
