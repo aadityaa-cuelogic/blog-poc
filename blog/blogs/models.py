@@ -28,7 +28,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField()
+    updated_on = models.DateTimeField(auto_now_add=True)
     is_active = models.SmallIntegerField(default=1)
     is_spam = models.SmallIntegerField(default=0)
     category = models.ForeignKey(Category)

@@ -15,11 +15,19 @@
                         {% endfor %}
                     </ul>
                 </li>
+                <li>
+                    <a href="/user/newpost">Create Post</a>
+                </li>
             </ul>
         </nav>
         <div class="row">
             <form role="form" method="post" action="{% url 'create_post' %}">
+                {{ form.errors }}
+                {{ form.non_field_errors }}
                 {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
                <div class="form-group">
                   <label for="post_title">{{ form.title.label_tag }}</label>
                  {{ form.title }}

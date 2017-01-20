@@ -7,6 +7,8 @@ from django.template import RequestContext
 from blogs.forms import RegistrationForm, CreatePostForm
 from django.contrib.auth.models import User
 from .models import Post, Comment, Category
+import datetime
+from django.utils import timezone
 # Create your views here.
 
 # home page method
@@ -27,12 +29,11 @@ def createPost(request):
         form = CreatePostForm(request.POST)
         if form.is_valid():
             try:
-                post = Post.objects.create_post(
+                post = Post.objects.create(
                     title=form.cleaned_data['title'],
                     body=form.cleaned_data['description'],
                     category=form.cleaned_data['category'],
-                    author_id=request.user.id,
-
+                    author=request.user
                 )
             except Post.DoesNotExist:
                 raise HttpResponse('Blog create failed !!!')
@@ -56,7 +57,8 @@ def detailPost(request, slug):
         category = Category.objects.all()
     except Post.DoesNotExist:
         raise Http404("Blog does not exist")
-    return render(request, 'detail_post.html', {'blog_post': post, 'category':category, 'comment':comment})
+    return render(request, 'detail_post.html', {'blog_post': post,
+                'category':category, 'comment':comment})
 
 # method to register user
 @csrf_protect

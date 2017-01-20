@@ -9,7 +9,7 @@ from django.utils.text import slugify
 # If you don't do this you cannot use Bootstrap CSS
 
 class CreatePostForm(forms.Form):
-    title = forms.RegexField(regex=r'^[a-zA-Z0-9_-]+$',
+    title = forms.RegexField(regex=r'^[a-zA-Z0-9_\-\s]+$',
             widget=forms.TextInput(attrs={'required':True, 'max_length':200,
             'class':"form-control", 'placeholder': 'Enter title for your post'}),
             label=_("Title"),
@@ -18,6 +18,7 @@ class CreatePostForm(forms.Form):
     category = forms.ModelChoiceField(queryset=(Category.objects.all()),
                 label=_("Category")
                 )
+    slug = forms.CharField(widget=forms.HiddenInput(), required=False)
     description = forms.CharField(widget=forms.Textarea(attrs={'required':True,
                 'max_length':200,'class':"form-control",
                 'placeholder': 'Enter description for your post'}),
@@ -34,11 +35,6 @@ class CreatePostForm(forms.Form):
             return self.cleaned_data['title']
         raise forms.ValidationError(
             _("This post title already exits. Please try something else!"))
-
-    # def clean_slug(self):
-    #     if self.title:
-    #         self.slug = slugify(self.title)
-    #     super(Category, self).save(*args, **kwargs)
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label="Username", max_length=30,
