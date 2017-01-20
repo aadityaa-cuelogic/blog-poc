@@ -22,9 +22,18 @@
         </nav>
         <div class="row">
             <form role="form" method="post" action="{% url 'create_post' %}">
-                {{ form.errors }}
-                {{ form.non_field_errors }}
                 {% csrf_token %}
+                
+                {% if form.errors %}
+                  {% if form.title.errors %}
+                    {{form.title.errors}}
+                  {% elif form.category.errors %}
+                    {{form.category.errors}}
+                  {% elif form.non_field_errors %}
+                    {{form.non_field_errors}}
+                  {% endif %}
+                {% endif %}
+
                 {% for hidden in form.hidden_fields %}
                     {{ hidden }}
                 {% endfor %}

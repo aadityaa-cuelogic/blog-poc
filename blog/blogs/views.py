@@ -24,6 +24,7 @@ def home(request):
 #         for chunk in f.chunks():
 #             destination.write(chunk)
 
+@login_required(login_url="/login/")
 def createPost(request):
     if request.method == 'POST':
         form = CreatePostForm(request.POST)
@@ -36,9 +37,8 @@ def createPost(request):
                     author=request.user
                 )
             except Post.DoesNotExist:
-                raise HttpResponse('Blog create failed !!!')
-            return HttpResponse("Success in form")
-            # return render(request, "create_post.html")
+                return render(request, 'create_post.html', {'form': form})
+            return HttpResponseRedirect('/user/newpost/success/')
         else:
             return render(request, 'create_post.html', {'form': form})
     else:
@@ -46,7 +46,7 @@ def createPost(request):
         return render(request, 'create_post.html', context)
 
 def createPostSuccess(request):
-    return HttpResponse("Error in form")
+    return HttpResponse("Blog created Successfully!!!")
 
 
 # method to show blog post details page

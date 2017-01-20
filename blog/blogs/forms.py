@@ -14,7 +14,7 @@ class CreatePostForm(forms.Form):
             'class':"form-control", 'placeholder': 'Enter title for your post'}),
             label=_("Title"),
             error_messages={ 'invalid':
-            _("Title can contain only letters, numbers and underscores.")})
+            _("Title can contain only letters,numbers,underscores and space.")})
     category = forms.ModelChoiceField(queryset=(Category.objects.all()),
                 label=_("Category")
                 )
