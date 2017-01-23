@@ -7,4 +7,8 @@ urlpatterns = [
     url(r'^user/newpost/$', views.createPost, name='create_post'),
     url(r'^user/newpost/success/$', views.createPostSuccess,
         name='create_post_success'),
+    url(r'^user/savecomment$', views.saveComment, name="save_comment"),
+    url(r'^category/(?P<slug>[\w-]+)/$', views.categoryPost,
+        name='category_post'),
+    url(r'^user/newpost/like/$', views.likePost, name="like_post"),
 ]

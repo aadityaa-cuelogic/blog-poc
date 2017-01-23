@@ -11,13 +11,18 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     {% for cat in category %}
-                        <li><a href="3">{{cat.title}}</a></li>
+                        <li><a href="/category/{{cat.slug}}">{{cat.title}}</a></li>
                     {% endfor %}
                 </ul>
             </li>
             <li>
                 <a href="/user/newpost">Create Post</a>
             </li>
+            {% if selected_category is not None %}
+                <li>
+                    <a href="/category/{{selected_category.slug}}">{{selected_category.title}}</a>
+                </li>
+            {% endif %}
         </ul>
     </nav>
     <h3>Blogs</h3>

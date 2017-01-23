@@ -8,6 +8,16 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 # If you don't do this you cannot use Bootstrap CSS
 
+class CreateCommentForm(forms.Form):
+    comment = forms.RegexField(regex=r'^[a-zA-Z0-9_\-\s]+$',
+            widget=forms.Textarea(attrs={'placeholder':'Enter your comment',
+            'class': 'form-control'}),
+            label=_("Comment"),
+            required=True
+            )
+    # post = forms.CharField(queryset=(Post.objects.get(pk=)))
+
+
 class CreatePostForm(forms.Form):
     title = forms.RegexField(regex=r'^[a-zA-Z0-9_\-\s]+$',
             widget=forms.TextInput(attrs={'required':True, 'max_length':200,
@@ -20,7 +30,7 @@ class CreatePostForm(forms.Form):
                 )
     slug = forms.CharField(widget=forms.HiddenInput(), required=False)
     description = forms.CharField(widget=forms.Textarea(attrs={'required':True,
-                'max_length':200,'class':"form-control",
+                'class':"form-control",
                 'placeholder': 'Enter description for your post'}),
             label=_("Description"))
     file_field = forms.FileField(widget=forms.ClearableFileInput(
