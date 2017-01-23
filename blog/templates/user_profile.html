@@ -18,13 +18,9 @@
             <li>
                 <a href="/user/newpost">Create Post</a>
             </li>
-            {% if selected_category is not None %}
-                <li>
-                    <a href="/category/{{selected_category.slug}}">{{selected_category.title}}</a>
-                </li>
-            {% endif %}
         </ul>
     </nav>
+    {% include "myprofileform.html" %}
     <div class="row">
         <h3>Blogs</h3>
     </div>
