@@ -35,7 +35,11 @@ def searchPost(request):
                 qset |= Q(title__contains=term)
             matching_results = Post.objects.filter(qset)
             category = Category.objects.all()
-            context = {'latest_blog_post': matching_results, 'category':category, 'search_term':searchVal}
+            context = {
+                        'latest_blog_post': matching_results,
+                        'category':category,
+                        'search_term':searchVal
+                      }
             return render(request, "search_post.html", context)
     return HttpResponseRedirect('/')
 
