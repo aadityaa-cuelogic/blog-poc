@@ -77,7 +77,7 @@ def userProfile(request, username=None):
             try:
                 user = User.objects.get(username=username)
                 category = Category.objects.all()
-                post = Post.objects.filter(author=user)
+                post = Post.objects.filter(author=user).order_by('-created_on')
                 try:
                     loggedUser = User.objects.get(pk=request.user.id)
                 except User.DoesNotExist:
@@ -234,6 +234,7 @@ def createPost(request):
         return render(request, 'create_post.html', context)
 
 def createPostSuccess(request):
+    return HttpResponseRedirect('/user/'+request.user.username+'/profile/')
     return HttpResponse("Blog created Successfully!!!")
 
 

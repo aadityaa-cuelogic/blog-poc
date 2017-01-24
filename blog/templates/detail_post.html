@@ -76,11 +76,11 @@
                 success: function(result){
                     if(result.status == 'success')
                         input.val(parseInt(result.likescount));
-                    alert('success');
+                    // alert('success');
                 },
                 error: function(response){
                     console.log(response, '==error response');
-                    alert("error");
+                    // alert("error");
                 }
             });
          });
