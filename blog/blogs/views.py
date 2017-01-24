@@ -10,6 +10,7 @@ from .models import Post, Comment, Category, Likes
 import datetime
 import json
 from django.utils import timezone
+from django.db.models import Q
 # Create your views here.
 
 # home page method
@@ -19,6 +20,25 @@ def home(request):
     category = Category.objects.all()
     context = {'latest_blog_post': latest_blog_post, 'category':category}
     return render(request, "home.html", context)
+
+# search posts by title
+@csrf_exempt
+def searchPost(request):
+    if request.method == 'POST':
+        if request.POST['search_term']:
+            searchVal = request.POST['search_term']
+            qset = Q()
+            newstring = ""
+            for item in searchVal:
+                newstring += item.lower()
+            for term in newstring.split():
+                qset |= Q(title__contains=term)
+            matching_results = Post.objects.filter(qset)
+            category = Category.objects.all()
+            context = {'latest_blog_post': matching_results, 'category':category, 'search_term':searchVal}
+            return render(request, "search_post.html", context)
+    return HttpResponseRedirect('/')
+
 
 @login_required(login_url="/login/")
 def userDashboard(request):

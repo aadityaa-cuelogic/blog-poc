@@ -4,13 +4,13 @@
     </div>
     <div class="row">
         <div class="panel-body">
-            {% if form.errors %}
-              {% if form.email.errors %}
-                {{form.email.errors}}
-              {% elif form.username.errors %}
-                {{form.username.errors}}
-              {% elif form.non_field_errors %}
-                {{form.non_field_errors}}
+            {% if myprofileform.errors %}
+              {% if myprofileform.first_name.errors %}
+                {{myprofileform.first_name.errors}}
+              {% elif myprofileform.last_name.errors %}
+                {{myprofileform.last_name.errors}}
+              {% elif myprofileform.non_field_errors %}
+                {{myprofileform.non_field_errors}}
               {% endif %}
             {% endif %}
             {% if update_profile %}
