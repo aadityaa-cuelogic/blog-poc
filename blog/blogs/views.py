@@ -20,6 +20,36 @@ def home(request):
     context = {'latest_blog_post': latest_blog_post, 'category':category}
     return render(request, "home.html", context)
 
+@login_required(login_url="/login/")
+def userDashboard(request):
+    if request.method == 'GET':
+        try:
+            user = User.objects.get(username=request.user.username)
+        except User.DoesNotExist:
+            return HttpResponseRedirect('/logout/')
+
+        category = Category.objects.all()
+        post_count = Post.objects.filter(author=user).count()
+        posts = Post.objects.filter(author=user)
+        posts_id = []
+        for i in posts:
+            posts_id.append(i.id)
+        comments_count = Comment.objects.filter(user=user).count()
+        user_post_comments = Comment.objects.filter(post_id__in=posts_id).count()
+        user_liked_count = Likes.objects.filter(user=user).count()
+        user_post_likes_count = Likes.objects.filter(post_id__in=posts_id).count()
+        context = {
+            'post_count': post_count,
+            'comments_count':comments_count,
+            'user_post_comments' : user_post_comments,
+            'user_liked_count':user_liked_count,
+            'user_post_likes_count':user_post_likes_count,
+            'category':category
+        }
+        return render(request, "dashboard.html", context)
+    else:
+        return HttpResponseRedirect('/logout/')
+        
 def updateProfile(request, username=None):
     if request.method == "POST":
         if (

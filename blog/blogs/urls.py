@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^user/newpost/like/$', views.likePost, name="like_post"),
     url(r'^user/(?P<username>[\w-]+)/profile/$', views.userProfile, name='user_profile'),
     url(r'^user/(?P<username>[\w-]+)/updateprofile/$', views.updateProfile, name='update_profile'),
-
+    url(r'^user/dashboard/$', views.userDashboard, name='user_dashboard'),
 ]
