@@ -68,11 +68,13 @@ class CreatePostForm(forms.Form):
                 'class':"form-control",
                 'placeholder': 'Enter description for your post'}),
             label=_("Description"))
-    file_field = forms.FileField(widget=forms.ClearableFileInput(
-            attrs={'multiple': False}),
-            label=_("Upload Image"),
-            required=False)
-
+    file_field = forms.ImageField(
+                    widget=forms.ClearableFileInput(
+                        attrs={'multiple': False}
+                    ),
+                    label=_("Upload Image"),
+                    required=False
+                 )
     def clean_title(self):
         try:
             post = Post.objects.get(title__iexact=self.cleaned_data['title'])

@@ -60,3 +60,9 @@ class Likes(models.Model):
     post = models.ForeignKey(Post, related_name = "like_post")
     user = models.ForeignKey(User, related_name = "like_user")
     created_on = models.DateTimeField(auto_now_add=True)
+
+class PostImage(models.Model):
+    docfile = models.FileField(upload_to='documents/%Y/%m/%d')
+    post = models.ForeignKey(Post, related_name = "post_image")
+    user = models.ForeignKey(User, related_name = "user_image")
+    created_on = models.DateTimeField(auto_now_add=True)

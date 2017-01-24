@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
 from blogs.forms import RegistrationForm, CreatePostForm, MyProfileForm
 from django.contrib.auth.models import User
-from .models import Post, Comment, Category, Likes
+from .models import Post, Comment, Category, Likes, PostImage
 import datetime
 import json
 from django.utils import timezone
@@ -238,6 +238,7 @@ def saveComment(request):
 @login_required(login_url="/login/")
 def createPost(request):
     category = Category.objects.all()
+    return HttpResponse(request.POST['file_field'])
     if request.method == 'POST':
         form = CreatePostForm(request.POST)
         if form.is_valid():
@@ -248,7 +249,9 @@ def createPost(request):
                     category=form.cleaned_data['category'],
                     author=request.user
                 )
-            except Post.DoesNotExist:
+                newdoc = PostImage(docfile = request.FILES['file_field'])
+                newdoc.save()
+            except Post.DoesNotExist or PostImage.DoesNotExist:
                 return render(request, 'create_post.html', {'form': form, 'category':category})
             return HttpResponseRedirect('/user/newpost/success/')
         else:
