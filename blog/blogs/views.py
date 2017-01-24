@@ -49,7 +49,7 @@ def userDashboard(request):
         return render(request, "dashboard.html", context)
     else:
         return HttpResponseRedirect('/logout/')
-        
+
 def updateProfile(request, username=None):
     if request.method == "POST":
         if (
@@ -78,9 +78,13 @@ def userProfile(request, username=None):
                 user = User.objects.get(username=username)
                 category = Category.objects.all()
                 post = Post.objects.filter(author=user)
-                loggedUser = User.objects.get(pk=request.user.id)
+                try:
+                    loggedUser = User.objects.get(pk=request.user.id)
+                except User.DoesNotExist:
+                    loggedUser = {}
+
                 update_profile = False
-                if user.id == loggedUser.id:
+                if loggedUser and user.id == loggedUser.id:
                     update_profile = True
 
                 if user.first_name is None:
@@ -110,9 +114,9 @@ def userProfile(request, username=None):
                     }
             return render(request, 'user_profile.html', context)
         else:
-            raise Http404("User does not exist")
+            raise Http404("Username does not exist")
     else:
-        raise Http404("User does not exist")
+        raise Http404("error :User does not exist")
 
 # return count of likes for a certain post
 def getLikesCount(post_id):
