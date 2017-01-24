@@ -49,9 +49,14 @@ class Post(models.Model):
 
 class Comment(models.Model):
     text = models.TextField()
-    post = models.ForeignKey(Post)
-    user = models.ForeignKey(User)
+    post = models.ForeignKey(Post, related_name = "user_posts")
+    user = models.ForeignKey(User, related_name = "post_user")
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return self.text
+
+class Likes(models.Model):
+    post = models.ForeignKey(Post, related_name = "like_post")
+    user = models.ForeignKey(User, related_name = "like_user")
+    created_on = models.DateTimeField(auto_now_add=True)

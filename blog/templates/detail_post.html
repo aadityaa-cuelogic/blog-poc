@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row">
         <h2>
-            <a href="/blog/{{post.slug}}">{{blog_post.title}}</a>
+            <a href="/blog/{{blog_post.slug}}">{{blog_post.title}}</a>
         </h2>
         <p class="lead">
             by <a href="/user/{{blog_post.author.username}}">{{blog_post.author.first_name}} {{blog_post.author.last_name}}</a>
@@ -17,12 +17,19 @@
         <hr>
         <p>{{blog_post.body}}</p>
         <hr>
+            <!-- <button class="btn btn-primary"><span class="glyphicon glyphicon-thumbs-up"></span></button> -->
+            <a class="like"><i class="glyphicon glyphicon-thumbs-up"></i>
+                Like <input class="qty1" name="qty1" readonly="readonly" type="text" value="{{likescount}}" />
+            </a>
+        <hr>
         <!-- Post comment block -->
         <div class="well">
             <h4>Leave a Comment:</h4>
-            <form role="form">
+            <form method="post" action="/user/savecomment" role="form">
+                {% csrf_token %}
                 <div class="form-group">
-                    <textarea class="form-control" rows="3"></textarea>
+                    <input class="post_slug" type='hidden' name='post' value="{{blog_post.slug}}" />
+                    <textarea name="comment" class="form-control" rows="3" placeholder="Enter your comment here"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -53,4 +60,30 @@
         <a class="btn btn-primary" href="#">Load More <span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
 </div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+    $( document ).ready(function() {
+         $(".like").click(function () {
+             var input = $(this).find('.qty1');
+             $.ajax({
+                type:'post',
+                url: '/user/newpost/like/',
+                dataType : 'json',
+                data : {
+                    post_slug : $('.post_slug').val()
+                },
+                success: function(result){
+                    if(result.status == 'success')
+                        input.val(parseInt(result.likescount));
+                    alert('success');
+                },
+                error: function(response){
+                    console.log(response, '==error response');
+                    alert("error");
+                }
+            });
+         });
+    });
+</script>
 {% endblock %}
