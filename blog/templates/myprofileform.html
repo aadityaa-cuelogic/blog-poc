@@ -1,0 +1,50 @@
+{% block content %}
+    <div class="row">
+        <h3>Profile Details</h3>
+    </div>
+    <div class="row">
+        <div class="panel-body">
+            {% if myprofileform.errors %}
+              {% if myprofileform.first_name.errors %}
+                {{myprofileform.first_name.errors}}
+              {% elif myprofileform.last_name.errors %}
+                {{myprofileform.last_name.errors}}
+              {% elif myprofileform.non_field_errors %}
+                {{myprofileform.non_field_errors}}
+              {% endif %}
+            {% endif %}
+            {% if update_profile %}
+            <form method="post" action="/user/{{ username }}/updateprofile/">
+                {% csrf_token %}
+            {% endif %}
+                <p class="bs-component">
+                    <table>
+                        <tr>
+                            <td>{{ myprofileform.username.label_tag }}</td>
+                            <td>{{ myprofileform.username }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ myprofileform.email.label_tag }}</td>
+                            <td>{{ myprofileform.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ myprofileform.first_name.label_tag }}</td>
+                            <td>{{ myprofileform.first_name }}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ myprofileform.last_name.label_tag }}</td>
+                            <td>{{ myprofileform.last_name }}</td>
+                        </tr>
+                    </table>
+                </p>
+            {% if update_profile %}
+                <p class="bs-component">
+                    <center>
+                        <input class="btn btn-success btn-sm" type="submit" value="Update" />
+                    </center>
+                </p>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

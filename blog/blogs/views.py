@@ -4,12 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
-from blogs.forms import RegistrationForm, CreatePostForm
+from blogs.forms import RegistrationForm, CreatePostForm, MyProfileForm
 from django.contrib.auth.models import User
 from .models import Post, Comment, Category, Likes
 import datetime
 import json
 from django.utils import timezone
+from django.db.models import Q
 # Create your views here.
 
 # home page method
@@ -19,6 +20,128 @@ def home(request):
     category = Category.objects.all()
     context = {'latest_blog_post': latest_blog_post, 'category':category}
     return render(request, "home.html", context)
+
+# search posts by title
+@csrf_exempt
+def searchPost(request):
+    if request.method == 'POST':
+        if request.POST['search_term']:
+            searchVal = request.POST['search_term']
+            qset = Q()
+            newstring = ""
+            for item in searchVal:
+                newstring += item.lower()
+            for term in newstring.split():
+                qset |= Q(title__contains=term)
+            matching_results = Post.objects.filter(qset)
+            category = Category.objects.all()
+            context = {
+                        'latest_blog_post': matching_results,
+                        'category':category,
+                        'search_term':searchVal
+                      }
+            return render(request, "search_post.html", context)
+    return HttpResponseRedirect('/')
+
+
+@login_required(login_url="/login/")
+def userDashboard(request):
+    if request.method == 'GET':
+        try:
+            user = User.objects.get(username=request.user.username)
+        except User.DoesNotExist:
+            return HttpResponseRedirect('/logout/')
+
+        category = Category.objects.all()
+        post_count = Post.objects.filter(author=user).count()
+        posts = Post.objects.filter(author=user)
+        posts_id = []
+        for i in posts:
+            posts_id.append(i.id)
+        comments_count = Comment.objects.filter(user=user).count()
+        user_post_comments = Comment.objects.filter(post_id__in=posts_id).count()
+        user_liked_count = Likes.objects.filter(user=user).count()
+        user_post_likes_count = Likes.objects.filter(post_id__in=posts_id).count()
+        context = {
+            'post_count': post_count,
+            'comments_count':comments_count,
+            'user_post_comments' : user_post_comments,
+            'user_liked_count':user_liked_count,
+            'user_post_likes_count':user_post_likes_count,
+            'category':category
+        }
+        return render(request, "dashboard.html", context)
+    else:
+        return HttpResponseRedirect('/logout/')
+
+def updateProfile(request, username=None):
+    if request.method == "POST":
+        if (
+            username is not None or
+            request.POST['first_name'] is not None  or
+            request.POST['last_name'] is not None
+           ):
+                first_name = request.POST['first_name']
+                last_name = request.POST['last_name']
+                try:
+                    user = User.objects.get(username=username)
+                    loggedUser = request.user
+                except User.DoesNotExist:
+                    return HttpResponseRedirect('/logout/')
+                if user.id == loggedUser.id:
+                    updateUser = User.objects.filter(username=username).update(first_name=first_name, last_name=last_name)
+        else:
+            return HttpResponseRedirect('/logout/')
+    return HttpResponseRedirect('/user/'+username+'/profile')
+
+# function to get user profile
+def userProfile(request, username=None):
+    if request.method == 'GET':
+        if username is not None:
+            try:
+                user = User.objects.get(username=username)
+                category = Category.objects.all()
+                post = Post.objects.filter(author=user).order_by('-created_on')
+                try:
+                    loggedUser = User.objects.get(pk=request.user.id)
+                except User.DoesNotExist:
+                    loggedUser = {}
+
+                update_profile = False
+                if loggedUser and user.id == loggedUser.id:
+                    update_profile = True
+
+                if user.first_name is None:
+                    first_name='FirstName'
+                else:
+                    first_name=user.first_name
+                if user.last_name is None:
+                    last_name='LastName'
+                else:
+                    last_name=user.last_name
+
+                form_data = {
+                    'first_name': first_name,
+                    'last_name':last_name,
+                    'username':user.username,
+                    'email':user.email
+                }
+                myprofileform = MyProfileForm(form_data)
+            except User.DoesNotExist:
+                raise Http404("User does not exist")
+            context = {
+                        'latest_blog_post': post,
+                        'category':category,
+                        'username':username,
+                        'myprofileform':myprofileform,
+                        'update_profile':update_profile
+                    }
+            return render(request, 'user_profile.html', context)
+        else:
+            raise Http404("Username does not exist")
+    else:
+        raise Http404("error :User does not exist")
+
 # return count of likes for a certain post
 def getLikesCount(post_id):
     try:
@@ -135,6 +258,7 @@ def createPost(request):
         return render(request, 'create_post.html', context)
 
 def createPostSuccess(request):
+    return HttpResponseRedirect('/user/'+request.user.username+'/profile/')
     return HttpResponse("Blog created Successfully!!!")
 
 

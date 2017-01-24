@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <nav class="navbar navbar-default" role="navigation" id="topmenu">
+        <ul class="nav navbar-nav navbar-left">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Category
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    {% for cat in category %}
+                        <li><a href="/category/{{cat.slug}}">{{cat.title}}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li>
+                <a href="/user/newpost">Create Post</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="row">
+        <h3>Dashboard</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Activity Counts</h3>
+                </div>
+                <div class="panel-body">
+                    <p class="bs-component">
+                        <table>
+                            <tr>
+                                <td>Published Post : </td>
+                                <td>{{post_count}}</td>
+                            </tr>
+                            <tr>
+                                <td>My Comments : </td>
+                                <td>{{comments_count}}</td>
+                            </tr>
+                            <tr>
+                                <td>Comments on My Posts : </td>
+                                <td>{{user_post_comments}}</td>
+                            </tr>
+                            <tr>
+                                <td>Likes on My Posts : </td>
+                                <td>{{user_post_likes_count}}</td>
+                            </tr>
+                            <tr>
+                                <td>Likes By Me : </td>
+                                <td>{{user_liked_count}}</td>
+                            </tr>
+
+                        </table>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -8,14 +8,49 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
 # If you don't do this you cannot use Bootstrap CSS
 
-class CreateCommentForm(forms.Form):
-    comment = forms.RegexField(regex=r'^[a-zA-Z0-9_\-\s]+$',
-            widget=forms.Textarea(attrs={'placeholder':'Enter your comment',
-            'class': 'form-control'}),
-            label=_("Comment"),
-            required=True
+class MyProfileForm(forms.Form):
+    first_name = forms.RegexField(
+                regex=r'^[a-zA-Z]+$',
+                widget=forms.TextInput(attrs={
+                    'max_length':30,
+                    'placeholder':'Enter your first name',
+                    'class': 'form-control'
+                }),
+                label=_("First Name"),
+                required=True
             )
-    # post = forms.CharField(queryset=(Post.objects.get(pk=)))
+    last_name = forms.RegexField(
+                regex=r'^[a-zA-Z]+$',
+                widget=forms.TextInput(attrs={
+                    'max_length':30,
+                    'placeholder':'Enter your last name',
+                    'class': 'form-control'
+                }),
+                label=_("Last Name"),
+                required=True
+            )
+    email = forms.EmailField(
+                widget=forms.TextInput(attrs={
+                    'class': 'form-control',
+                    'disabled': True,
+                    'max_length':30,
+                }),
+                required=True,
+                label=_("Email")
+            )
+    username = forms.CharField(
+                    label="Username",
+                    max_length=30,
+                    widget=forms.TextInput(attrs={'class': 'form-control',
+                    'disabled': True,
+                    'name': 'username'})
+                )
+    def clean(self):
+        if 'first_name' not in self.cleaned_data or self.cleaned_data['first_name'] is None:
+            raise forms.ValidationError(_("First Name is required"))
+        if 'last_name' not in self.cleaned_data or self.cleaned_data['last_name'] is None:
+            raise forms.ValidationError(_("Last Name is required"))
+        return self.cleaned_data
 
 
 class CreatePostForm(forms.Form):

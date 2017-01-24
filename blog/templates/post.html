@@ -1,22 +1,26 @@
 {% block content %}
-{% if latest_blog_post %}
-  {% for post in latest_blog_post %}
-    <h2>
-        <a href="/blog/{{post.slug}}">{{post.title|truncatechars:70}}</a>
-    </h2>
-    <p class="lead">
-        by <a href="#">{{post.author.username}}</a>
-    </p>
-    <p>Category: <a href="#">{{post.category.title}}</a></p>
-    <p><span class="glyphicon glyphicon-time"></span> Posted on {{post.created_on}}</p>
-    <hr>
-    <img class="img-responsive" src="http://placehold.it/900x300" alt="">
-    <hr>
-    <p>{{post.body|truncatechars:100}}</p>
-    <a class="btn btn-primary" href="/blog/{{post.slug}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
-    <hr>
-  {% endfor %}
-{% else %}
-    <h4>No blogs found!!!</h4>
-{% endif %}
+    {% if latest_blog_post %}
+      {% for post in latest_blog_post %}
+        <div class="row">
+            <h2>
+                <a href="/blog/{{post.slug}}">{{post.title|truncatechars:70}}</a>
+            </h2>
+            <p class="lead">
+                by <a href="/user/{{post.author.username}}/profile">{{post.author.username}}</a>
+            </p>
+            <p>Category: <a href="#">{{post.category.title}}</a></p>
+            <p><span class="glyphicon glyphicon-time"></span> Posted on {{post.created_on}}</p>
+            <hr>
+            <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+            <hr>
+            <p>{{post.body|truncatechars:100}}</p>
+            <a class="btn btn-primary" href="/blog/{{post.slug}}">Read More <span class="glyphicon glyphicon-chevron-right"></span></a>
+            <hr>
+        </div>
+      {% endfor %}
+    {% else %}
+        <div class="row">
+            <h4>No blogs found!!!</h4>
+        </div>
+    {% endif %}
 {% endblock %}

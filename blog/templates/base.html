@@ -24,33 +24,46 @@
                                 {% endif %}
                                 <a class="navbar-brand" href="/">BLOG-POC</a>
                             </div>
-                            {% if user.is_authenticated %}
+
                             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="nav navbar-nav navbar-right">
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{user.get_username}}
-                                            <span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li>
-                                                <a href="/">Home</a>
-                                            </li>
-                                            <li>
-                                                <a href="#">My Profile</a>
-                                            </li>
-                                            <li class="divider"></li>
-                                            <li>
-                                                <a href="/password_change/">Change Password</a>
-                                            </li>
-                                            <li class="divider"></li>
-                                            <li>
-                                                <a href="/logout">Logout</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                {% if user.is_authenticated %}
+                                    <ul class="nav navbar-nav navbar-right loggedin-nav">
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{user.get_username}}
+                                                <span class="caret"></span>
+                                            </a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li>
+                                                    <a href="/">Home</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/user/dashboard/">Dashboard</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/user/{{user.get_username}}/profile/">My Profile</a>
+                                                </li>
+                                                <li class="divider"></li>
+                                                <li>
+                                                    <a href="/password_change/">Change Password</a>
+                                                </li>
+                                                <li class="divider"></li>
+                                                <li>
+                                                    <a href="/logout">Logout</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                {% else %}
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li>
+                                            <a href="/login/">Sign In</a>
+                                        </li>
+                                        <li>
+                                            <a href="/register/">Sign Up</a>
+                                        </li>
+                                    </ul>
+                                {% endif %}
                             </div>
-                            {% endif %}
                         </div>
                     </nav>
 
@@ -64,7 +77,7 @@
                     {% block javascript %}
                       <script>
                           {% if not user.is_authenticated %}
-                            $("ul.nav.navbar-nav.navbar-right").css("display","none");
+                            $("ul.nav.navbar-nav.navbar-right.loggedin-nav").css("display","none");
                           {% endif %}
                       </script>
                     {% endblock %}
