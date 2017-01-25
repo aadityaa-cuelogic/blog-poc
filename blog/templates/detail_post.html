@@ -13,7 +13,11 @@
         <p><span class="glyphicon glyphicon-time"></span> Posted on {{blog_post.created_on}}</p>
         <p>Category: <a href="#">{{blog_post.category.title}}</a></p>
         <hr>
-        <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+        {% for img in imagepost %}
+            {% if img.post_id == blog_post.id %}
+                <img class="img-responsive post-img" src="/media/{{img.post_pic}}" alt="">
+            {% endif %}
+        {% endfor %}
         <hr>
         <p>{{blog_post.body}}</p>
         <hr>

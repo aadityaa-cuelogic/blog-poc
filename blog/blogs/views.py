@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.template import RequestContext
 from blogs.forms import RegistrationForm, CreatePostForm, MyProfileForm
 from django.contrib.auth.models import User
-from .models import Post, Comment, Category, Likes
+from .models import Post, Comment, Category, Likes, Imagepost
 import datetime
 import json
 from django.utils import timezone
@@ -17,8 +17,13 @@ from django.db.models import Q
 # @login_required(login_url="login/")
 def home(request):
     latest_blog_post = Post.objects.order_by('-created_on')[:5]
+    posts_id = []
+    for i in latest_blog_post:
+        posts_id.append(i.id)
+    imagepost = Imagepost.objects.filter(post_id__in=posts_id)
     category = Category.objects.all()
-    context = {'latest_blog_post': latest_blog_post, 'category':category}
+    context = {'latest_blog_post': latest_blog_post, 'category':category,
+                'imagepost':imagepost}
     return render(request, "home.html", context)
 
 # search posts by title
@@ -102,6 +107,11 @@ def userProfile(request, username=None):
                 user = User.objects.get(username=username)
                 category = Category.objects.all()
                 post = Post.objects.filter(author=user).order_by('-created_on')
+                posts_id = []
+                for i in post:
+                    posts_id.append(i.id)
+                imagepost = Imagepost.objects.filter(post_id__in=posts_id)
+
                 try:
                     loggedUser = User.objects.get(pk=request.user.id)
                 except User.DoesNotExist:
@@ -131,6 +141,7 @@ def userProfile(request, username=None):
                 raise Http404("User does not exist")
             context = {
                         'latest_blog_post': post,
+                        'imagepost':imagepost,
                         'category':category,
                         'username':username,
                         'myprofileform':myprofileform,
@@ -202,7 +213,16 @@ def categoryPost(request, slug):
 
         # latest_blog_post = Post.objects.order_by('-created_on')[:5]
         category = Category.objects.all()
-        context = {'latest_blog_post': latest_blog_post, 'category':category, 'selected_category':obj_category}
+        posts_id = []
+        for i in latest_blog_post:
+            posts_id.append(i.id)
+        imagepost = Imagepost.objects.filter(post_id__in=posts_id)
+        context = {
+                    'latest_blog_post': latest_blog_post,
+                    'category':category,
+                    'imagepost':imagepost,
+                    'selected_category':obj_category
+                }
     except Category.DoesNotExist:
         raise Http404("Category does not exist")
     return render(request, "home.html", context)
@@ -239,7 +259,7 @@ def saveComment(request):
 def createPost(request):
     category = Category.objects.all()
     if request.method == 'POST':
-        form = CreatePostForm(request.POST)
+        form = CreatePostForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 post = Post.objects.create(
@@ -248,11 +268,18 @@ def createPost(request):
                     category=form.cleaned_data['category'],
                     author=request.user
                 )
-            except Post.DoesNotExist:
-                return render(request, 'create_post.html', {'form': form, 'category':category})
+                imagepost = Imagepost.objects.create(
+                    post_pic=form.cleaned_data['file_field'],
+                    post=post,
+                    user=request.user
+                )
+            except Post.DoesNotExist or Imagepost.DoesNotExist:
+                return render(request, 'create_post.html', {'form': form,
+                                                'category':category})
             return HttpResponseRedirect('/user/newpost/success/')
         else:
-            return render(request, 'create_post.html', {'form': form, 'category':category})
+            return render(request, 'create_post.html', {'form': form,
+                                                'category':category})
     else:
         context = {'form':CreatePostForm(), 'category':category}
         return render(request, 'create_post.html', context)
@@ -269,10 +296,13 @@ def detailPost(request, slug):
         comment = Comment.objects.filter(post=post.id).order_by('-created_on')[:5]
         category = Category.objects.all()
         likescount = getLikesCount(post.id)
+        posts_id = [post.id]
+        imagepost = Imagepost.objects.filter(post_id__in=posts_id)
     except Post.DoesNotExist:
         raise Http404("Blog does not exist")
     return render(request, 'detail_post.html', {'blog_post': post,
-                'category':category, 'comment':comment, 'likescount':likescount})
+                'category':category, 'comment':comment,
+                'imagepost':imagepost,'likescount':likescount})
 
 # method to register user
 @csrf_exempt

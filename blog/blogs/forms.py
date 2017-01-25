@@ -68,7 +68,7 @@ class CreatePostForm(forms.Form):
                 'class':"form-control",
                 'placeholder': 'Enter description for your post'}),
             label=_("Description"))
-    file_field = forms.FileField(widget=forms.ClearableFileInput(
+    file_field = forms.ImageField(widget=forms.ClearableFileInput(
             attrs={'multiple': False}),
             label=_("Upload Image"),
             required=False)

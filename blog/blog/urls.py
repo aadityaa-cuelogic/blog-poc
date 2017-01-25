@@ -15,13 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.conf.urls.static import static
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from blog import settings
 
 # Add this import
 from django.contrib.auth import views as auth_views
 from blogs import views
 from blogs.forms import LoginForm, RegistrationForm
 
-urlpatterns = [
+urlpatterns =  [
     url(r'^admin/', admin.site.urls),
     url(r'', include('blogs.urls')),
     url(r'^login/$', auth_views.login, {'template_name': 'login.html',
@@ -47,4 +50,6 @@ urlpatterns = [
 
     url(r'^register/$', views.register, name="register"),
     url(r'^register/success/$', views.register_success,),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += staticfiles_urlpatterns()
