@@ -45,6 +45,10 @@ class MyProfileForm(forms.Form):
                     'disabled': True,
                     'name': 'username'})
                 )
+    file_field = forms.ImageField(widget=forms.ClearableFileInput(
+                                    attrs={'multiple': False}),
+                                    label=_("Upload Image"),
+                                    required=False)
     def clean(self):
         if 'first_name' not in self.cleaned_data or self.cleaned_data['first_name'] is None:
             raise forms.ValidationError(_("First Name is required"))

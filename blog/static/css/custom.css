@@ -41,3 +41,11 @@
     width: 304px;
     height: 236px;
 }
+
+.post-profile-img {
+    margin: 10px;
+    padding: 5px;
+    border: double black 1px;
+    width: 40px;
+    height: 40px;
+}

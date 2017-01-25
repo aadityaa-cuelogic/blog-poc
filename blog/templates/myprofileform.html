@@ -14,7 +14,7 @@
               {% endif %}
             {% endif %}
             {% if update_profile %}
-            <form method="post" action="/user/{{ username }}/updateprofile/">
+            <form method="post"  action="/user/{{ username }}/updateprofile/" enctype="multipart/form-data">
                 {% csrf_token %}
             {% endif %}
                 <p class="bs-component">
@@ -35,6 +35,12 @@
                             <td>{{ myprofileform.last_name.label_tag }}</td>
                             <td>{{ myprofileform.last_name }}</td>
                         </tr>
+                        {% if update_profile %}
+                            <tr>
+                               <td>{{ myprofileform.file_field.label_tag }}</td>
+                               <td>{{ myprofileform.file_field }}</td>
+                            </tr>
+                        {% endif %}
                     </table>
                 </p>
             {% if update_profile %}
