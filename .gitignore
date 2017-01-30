@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # database migration files
-/migrations/
+migrations/
 
 # Distribution / packaging
 .Python
@@ -90,3 +90,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+#remove media files
+media/
