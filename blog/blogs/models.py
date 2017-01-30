@@ -60,3 +60,16 @@ class Likes(models.Model):
     post = models.ForeignKey(Post, related_name = "like_post")
     user = models.ForeignKey(User, related_name = "like_user")
     created_on = models.DateTimeField(auto_now_add=True)
+
+class Imagepost(models.Model):
+    post_pic = models.ImageField(upload_to = 'media/',
+                    default = 'media/None/no-img.jpg')
+    post = models.ForeignKey(Post, related_name = "imp_post")
+    user = models.ForeignKey(User, related_name = "imp_user")
+    created_on = models.DateTimeField(auto_now_add=True)
+
+class Userprofile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(upload_to = 'media/profile/',
+                                    default = 'media/profile/None/no-img.jpg')
+    created_on = models.DateTimeField(auto_now_add=True)
