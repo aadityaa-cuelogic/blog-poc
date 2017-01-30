@@ -90,16 +90,16 @@ def updateProfile(request, username=None):
                 last_name = request.POST['last_name']
                 try:
                     user = User.objects.get(username=username)
-                    if request.FILES['file_field']:
-                        temp_var = True
-                        try:
-                            userprofile = Userprofile.objects.get(user=user)
-                        except Userprofile.DoesNotExist:
-                            temp_var =False
-                            userprofile = Userprofile.objects.create(
-                                profile_pic=request.FILES['file_field'],
-                                user=user
-                            )
+                    # if request.FILES['file_field']:
+                    #     temp_var = True
+                    #     try:
+                    #         userprofile = Userprofile.objects.get(user=user)
+                    #     except Userprofile.DoesNotExist:
+                    #         temp_var =False
+                    #         userprofile = Userprofile.objects.create(
+                    #             profile_pic=request.FILES['file_field'],
+                    #             user=user
+                    #         )
                         # if temp_var:
                         #     userprofile = Userprofile.objects.create(user=user).update(profile_pic=request.FILES['file_field'])
                     loggedUser = request.user
